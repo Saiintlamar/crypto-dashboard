@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Low-Risk Crypto Portfolio 2025</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #ffcc00;
+    }
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      background: #1c1c1c;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+    input, button {
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 0.5rem;
+      border: none;
+      font-size: 1rem;
+    }
+    .calculator input {
+      width: 100%;
+    }
+    canvas {
+      margin-top: 2rem;
+    }
+    .calculator {
+      margin-top: 2rem;
+    }
+    .charts {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🌟 Low-Risk Crypto Portfolio 2025</h1>
+    <div class="charts">
+      <canvas id="portfolioChart"></canvas>
+      <canvas id="profitChart"></canvas>
+    </div>
+
+    <h2>📈 Profit Calculator</h2>
+    <div class="calculator">
+      <label>Amount Staked per Token ($): <input type="number" id="stakeInput" value="1000"></label><br>
+      <button onclick="calculateProfits()">Calculate Yearly Profits</button>
+      <ul id="profitResults"></ul>
+    </div>
+  </div>
+
+  <script>
+    const tokenLabels = ['BTC', 'ETH', 'LINK', 'LDO', 'USDC'];
+    const aprs = [0, 3.8, 4.2, 6.0, 5.0];
+
+    const ctx1 = document.getElementById('portfolioChart').getContext('2d');
+    new Chart(ctx1, {
+      type: 'pie',
+      data: {
+        labels: tokenLabels,
+        datasets: [{
+          label: 'Portfolio Allocation',
+          data: [40, 30, 10, 10, 10],
+          backgroundColor: ['#f7931a', '#3c3c3d', '#2a5ada', '#00a3ff', '#2775ca'],
+          borderColor: '#111',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color: '#fff' } }
+        }
+      }
+    });
+
+    const profitChartCanvas = document.getElementById('profitChart').getContext('2d');
+    let profitChart;
+
+    function calculateProfits() {
+      const stake = parseFloat(document.getElementById('stakeInput').value);
+      const yearlyProfits = aprs.map(apr => (stake * apr / 100));
+
+      const resultList = document.getElementById('profitResults');
+      resultList.innerHTML = '';
+      yearlyProfits.forEach((profit, i) => {
+        const li = document.createElement('li');
+        li.innerText = `${tokenLabels[i]}: $${profit.toFixed(2)} per year @ ${aprs[i]}% APR`;
+        resultList.appendChild(li);
+      });
+
+      if (profitChart) profitChart.destroy();
+      profitChart = new Chart(profitChartCanvas, {
+        type: 'bar',
+        data: {
+          labels: tokenLabels,
+          datasets: [{
+            label: 'Yearly Profit ($)',
+            data: yearlyProfits,
+            backgroundColor: ['#f7931aaa', '#3c3c3daa', '#2a5adaaa', '#00a3ffaa', '#2775caaa']
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => `$${ctx.raw.toFixed(2)} / year`
+              }
+            }
+          },
+          scales: {
+            y: {
+              ticks: { color: '#fff' },
+              title: {
+                display: true,
+                text: 'Yearly Profit ($)',
+                color: '#fff'
+              }
+            },
+            x: {
+              ticks: { color: '#fff' }
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
