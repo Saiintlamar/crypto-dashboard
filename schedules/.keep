@@ -1,9 +1,0 @@
-{
-  "account": "tattoo1",
-  "media_url": "https://res.cloudinary.com/yourcloud/image/upload/v169xxx/tattoo1.jpg",
-  "media_type": "image/jpeg",
-  "brief": "blackwork skull forearm, 4 hours session, client male",
-  "caption": "",                       // leave blank to auto-generate caption from OpenAI (optional)
-  "scheduled_time": "2025-12-03T11:00:00+00:00",
-  "status": "pending"
-}
