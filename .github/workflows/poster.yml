@@ -1,28 +1,38 @@
-name: Instagram Auto Poster
+name: IG Scheduler
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # runs every 30 minutes
-  workflow_dispatch:         # allows manual run
+    - cron: '*/5 * * * *'   # every 5 minutes — adjust if you want less frequent
+  workflow_dispatch:        # allows manual run from GitHub UI
+
+permissions:
+  contents: write           # needed so the job can push changes back
 
 jobs:
-  run-bot:
+  run-scheduler:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
+      - name: Install deps
+        run: pip install -r requirements.txt
 
-    - name: Run bot
-      env:
-        IG_USERNAME: ${{ secrets.IG_USERNAME }}
-        IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
-      run: python main.py
+      - name: Run scheduler script
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          IG_TATTOO1_ID: ${{ secrets.IG_TATTOO1_ID }}
+          IG_TATTOO1_TOKEN: ${{ secrets.IG_TATTOO1_TOKEN }}
+          IG_TATTOO2_ID: ${{ secrets.IG_TATTOO2_ID }}
+          IG_TATTOO2_TOKEN: ${{ secrets.IG_TATTOO2_TOKEN }}
+          IG_SPA_ID: ${{ secrets.IG_SPA_ID }}
+          IG_SPA_TOKEN: ${{ secrets.IG_SPA_TOKEN }}
+        run: |
+          python3 scripts/process_schedules.py
